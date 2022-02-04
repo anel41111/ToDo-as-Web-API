@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.nikulin.test.todo.webapi.dao.ProjectRepository;
 import ru.nikulin.test.todo.webapi.dao.TaskRepository;
 import ru.nikulin.test.todo.webapi.dto.TaskDto;
-import ru.nikulin.test.todo.webapi.model.Task;
 import ru.nikulin.test.todo.webapi.service.TaskService;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class TaskServiceImpl implements TaskService {
     private final ProjectRepository projectRepository;
 
     @Override
-    public List<Task> getTasksByProjectId(Long projectId) {
+    public List<TaskDto> getTasksByProjectId(Long projectId, Integer pageNo, Integer pageSize, String sortBy) {
         return null;
     }
 
@@ -35,5 +34,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public boolean updateTask(TaskDto taskDto) {
         return false;
+    }
+
+    @Override
+    public TaskDto getTask(Long taskId) {
+        return null;
     }
 }

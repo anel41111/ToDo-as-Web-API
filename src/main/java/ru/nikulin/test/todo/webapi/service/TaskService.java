@@ -1,13 +1,17 @@
 package ru.nikulin.test.todo.webapi.service;
 
 import ru.nikulin.test.todo.webapi.dto.TaskDto;
-import ru.nikulin.test.todo.webapi.model.Task;
 
 import java.util.List;
 
 public interface TaskService {
-    List<Task> getTasksByProjectId(Long projectId);
+    List<TaskDto> getTasksByProjectId(Long projectId, Integer pageNo, Integer pageSize, String sortBy);
+
     boolean saveTaskForProject(TaskDto taskDto, Long projectId);
+
     boolean deleteTaskById(Long taskId);
+
     boolean updateTask(TaskDto taskDto);
+
+    TaskDto getTask(Long taskId);
 }
