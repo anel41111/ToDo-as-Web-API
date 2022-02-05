@@ -1,6 +1,8 @@
 package ru.nikulin.test.todo.webapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.nikulin.test.todo.webapi.dao.ProjectRepository;
 import ru.nikulin.test.todo.webapi.dto.ProjectDto;
@@ -18,6 +20,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDto> findAllProjects(Integer pageNo, Integer pageSize, String sortBy) {
+        var pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        var result = projectRepository.findAll(pageable);
+//        result.get()
         return null;
     }
 
