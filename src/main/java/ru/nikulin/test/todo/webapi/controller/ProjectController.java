@@ -59,7 +59,7 @@ public class ProjectController {
     public ResponseEntity<ProjectDto> getProjectById(
             @Parameter(name = "id", description = "id of a project", required = true)
             @PathVariable Long id) {
-        var project = projectService.findProjectById(id);
+        var project = projectService.findProjectById(id).orElse(null);
         return ResponseEntity.ok(project);
     }
 

@@ -13,6 +13,7 @@ import ru.nikulin.test.todo.webapi.service.ProjectService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,8 +40,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDto findProjectById(Long id) {
-        return null;
+    public Optional<ProjectDto> findProjectById(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Id cannot be null or <= 0");
+        }
+        return projectRepository.findById(id).map(s -> mapper.map(s, ProjectDto.class));
     }
 
     @Override
