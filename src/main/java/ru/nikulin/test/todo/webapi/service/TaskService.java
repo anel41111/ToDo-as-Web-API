@@ -3,9 +3,10 @@ package ru.nikulin.test.todo.webapi.service;
 import ru.nikulin.test.todo.webapi.dto.TaskDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskService {
-    List<TaskDto> getTasksByProjectId(Long projectId, Integer pageNo, Integer pageSize, String sortBy);
+    List<TaskDto> getTasksByProjectId(Long projectId);
 
     boolean saveTaskForProject(TaskDto taskDto, Long projectId);
 
@@ -13,5 +14,5 @@ public interface TaskService {
 
     boolean updateTask(TaskDto taskDto);
 
-    TaskDto getTask(Long taskId);
+    Optional<TaskDto> findTaskById(Long id);
 }

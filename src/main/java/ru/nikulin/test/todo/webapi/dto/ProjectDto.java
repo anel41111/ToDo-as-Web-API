@@ -1,9 +1,6 @@
 package ru.nikulin.test.todo.webapi.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
+@EqualsAndHashCode(of = "id")
 public class ProjectDto {
     private Long id;
     private String projectName;

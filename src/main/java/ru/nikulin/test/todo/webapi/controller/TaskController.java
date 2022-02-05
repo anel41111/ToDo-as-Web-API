@@ -26,7 +26,7 @@ public class TaskController {
     public ResponseEntity<TaskDto> getTask(
             @Parameter(name = "id", description = "id of a task", required = true)
             @PathVariable Long id) {
-        var task = taskService.getTask(id);
+        var task = taskService.findTaskById(id).orElse(null);
         return ResponseEntity.ok(task);
     }
 }

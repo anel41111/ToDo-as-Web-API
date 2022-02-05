@@ -110,8 +110,39 @@ public class ProjectServiceTest {
         var container = projectService.findProjectById(id);
         assertTrue(container.isPresent());
         var expectedTasks = container.get().getTasks();
-        var resultTasks = taskService.getTasksByProjectId(id, 0, expectedTasks.size(), "id");
+        var resultTasks = taskService.getTasksByProjectId(id);
         assertTrue(resultTasks.containsAll(expectedTasks));
         assertEquals(expectedTasks.size(), resultTasks.size());
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(longs = {1, 120, 466, 551, 231})
+    public void shouldReturnTask(long id) {
+        var taskContainer = taskService.findTaskById(id);
+        assertTrue(taskContainer.isPresent());
+        var task = taskContainer.get();
+        assertNotNull(task);
+        assertNotNull(task.getId());
+        assertNotNull(task.getDescription());
+        assertNotNull(task.getTaskName());
+        assertNotNull(task.getTaskStatus());
+        assertNotNull(task.getPriority());
+        assertTrue(task.getPriority().compareTo(0) > 0 && task.getPriority().compareTo(100) <= 0);
+    }
+
+    @Test
+    public void shouldReturnEmptyTaskOptional() {
+        assertTrue(taskService.findTaskById(Long.MAX_VALUE).isEmpty());
+        assertTrue(taskService.findTaskById(1001L).isEmpty());
+    }
+
+
+    @Test
+    public void shouldThrowOnIncorrectArgWhenFindingTask() {
+        assertThrows(IllegalArgumentException.class, () -> taskService.findTaskById(-1L));
+        assertThrows(IllegalArgumentException.class, () -> taskService.findTaskById(Long.MIN_VALUE));
+        assertThrows(IllegalArgumentException.class, () -> taskService.findTaskById(null));
+        assertThrows(IllegalArgumentException.class, () -> taskService.findTaskById(0L));
     }
 }

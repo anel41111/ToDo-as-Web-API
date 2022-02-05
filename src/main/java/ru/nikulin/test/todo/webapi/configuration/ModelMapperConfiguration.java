@@ -11,8 +11,10 @@ import ru.nikulin.test.todo.webapi.model.Task;
 @Configuration
 public class ModelMapperConfiguration {
 
+    /**
+     * Configuration of a model Mapper bean
+     */
     @Bean
-    //
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.typeMap(Task.TaskStatus.class, TaskStatusDto.class).setConverter(context -> {

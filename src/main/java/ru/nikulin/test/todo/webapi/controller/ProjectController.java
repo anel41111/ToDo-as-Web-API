@@ -69,17 +69,8 @@ public class ProjectController {
     @GetMapping("/{id}/tasks")
     public ResponseEntity<List<TaskDto>> getProjectTasks(
             @Parameter(name = "id", description = "id of a project", required = true)
-            @PathVariable Long id,
-            @Parameter(name = "pageNo",
-                    description = "Used for pagination, number of pages to skip.")
-            @RequestParam(defaultValue = "0") Integer pageNo,
-            @Parameter(name = "pageSize", description = "Used for pagination, number of results per page.")
-            @RequestParam(defaultValue = "3") Integer pageSize,
-            @Parameter(name = "sortBy", description = "Specify a field by which to sort.",
-                    schema = @Schema(type = "string", defaultValue = "id",
-                            allowableValues = {"id", "priority", "taskStatus"}))
-            @RequestParam(defaultValue = "id") String sortBy) {
-        var taskList = taskService.getTasksByProjectId(id, pageNo, pageSize, sortBy);
+            @PathVariable Long id) {
+        var taskList = taskService.getTasksByProjectId(id);
         return ResponseEntity.ok(taskList);
     }
 }
