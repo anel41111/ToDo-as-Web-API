@@ -1,12 +1,14 @@
 package ru.nikulin.test.todo.webapi.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import ru.nikulin.test.todo.webapi.dto.ProjectDto;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -41,17 +43,19 @@ public class ProjectServiceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 20, 29, 50, 8, 9})
+    @ValueSource(ints = {1, 20, 15, 8, 9})
     public void shouldReturnCorrectAmount(int pageSize) {
         var result = service.findAllProjects(0, pageSize, "id");
         assertNotNull(result);
         assertEquals(pageSize, result.size());
+        assertInstanceOf(ProjectDto.class, result.get(0));
     }
 
-//    @ParameterizedTest
-//    @ValueSource(ints = {1, 20, 29, 50, 8, 9})
-//    public void shouldThrowOnIncorrectValue(int pageSize) {
-//        var result = service.findAllProjects(0, pageSize, "id");
-//        assertEquals(pageSize, result.size());
-//    }
+    @Test
+    public void shouldThrowBecauseOfIncorrectArguments() {
+        assertThrows(IllegalArgumentException.class, () -> service.findAllProjects(-1, 0, "id"));
+        assertThrows(IllegalArgumentException.class, () -> service.findAllProjects(0, 1, null));
+        assertThrows(IllegalArgumentException.class, () -> service.findAllProjects(0, Integer.MIN_VALUE, "id"));
+    }
+
 }

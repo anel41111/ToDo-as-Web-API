@@ -1,6 +1,7 @@
 package ru.nikulin.test.todo.webapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -9,21 +10,27 @@ import ru.nikulin.test.todo.webapi.dto.ProjectDto;
 import ru.nikulin.test.todo.webapi.dto.ProjectStatusDto;
 import ru.nikulin.test.todo.webapi.service.ProjectService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final ModelMapper mapper;
 
     @Override
     public List<ProjectDto> findAllProjects(Integer pageNo, Integer pageSize, String sortBy) {
         var pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         var result = projectRepository.findAll(pageable);
-//        result.get()
-        return null;
+
+        if (result.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return result.get().map(s -> mapper.map(s, ProjectDto.class)).collect(Collectors.toList());
     }
 
     @Override
