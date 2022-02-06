@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import ru.nikulin.test.todo.webapi.dao.ProjectRepository;
 import ru.nikulin.test.todo.webapi.dao.TaskRepository;
 import ru.nikulin.test.todo.webapi.dto.ProjectDto;
+import ru.nikulin.test.todo.webapi.exception.EntityDoesNotExistException;
 import ru.nikulin.test.todo.webapi.model.Project;
 import ru.nikulin.test.todo.webapi.model.Task;
 
@@ -115,8 +116,8 @@ public class ViewEndpointTests {
 
         @Test
         public void shouldReturnEmptyOptional() {
-            assertTrue(projectService.findProjectById(Long.MAX_VALUE).isEmpty());
-            assertTrue(projectService.findProjectById(101L).isEmpty());
+            assertThrows(EntityDoesNotExistException.class, () -> projectService.findProjectById(Long.MAX_VALUE));
+            assertThrows(EntityDoesNotExistException.class, () -> projectService.findProjectById(101L));
         }
 
         @Test
@@ -155,9 +156,9 @@ public class ViewEndpointTests {
         }
 
         @Test
-        public void shouldReturnEmptyTaskOptional() {
-            assertTrue(taskService.findTaskById(Long.MAX_VALUE).isEmpty());
-            assertTrue(taskService.findTaskById(1001L).isEmpty());
+        public void shouldThrowServiceException() {
+            assertThrows(EntityDoesNotExistException.class, () -> taskService.findTaskById(Long.MAX_VALUE));
+            assertThrows(EntityDoesNotExistException.class, () -> taskService.findTaskById(1001L));
         }
 
 
@@ -181,20 +182,21 @@ public class ViewEndpointTests {
 
         @BeforeEach
         public void setUp() {
-            TEST_TASK = taskRepository.save(new Task(
-                    null,
-                    "TEST_TASK",
-                    "TEST_TASK_DESCRIPTION",
-                    100, null,
-                    Task.TaskStatus.ToDo));
-
             TEST_PROJECT = projectRepository.save(new Project(null,
                     "TEST_PROJECT",
                     LocalDateTime.now(),
                     null,
                     Project.ProjectStatus.NotStarted,
                     10,
-                    List.of(TEST_TASK)));
+                    null));
+            TEST_TASK = taskRepository.save(new Task(
+                    null,
+                    "TEST_TASK",
+                    "TEST_TASK_DESCRIPTION",
+                    100, TEST_PROJECT,
+                    Task.TaskStatus.ToDo));
+            TEST_PROJECT.setTasks(List.of(TEST_TASK));
+            projectRepository.save(TEST_PROJECT);
         }
 
         @Test
@@ -206,7 +208,6 @@ public class ViewEndpointTests {
             assertEquals(TEST_PROJECT.getId(), result.getId());
             assertEquals(TEST_PROJECT.getProjectName(), result.getProjectName());
             assertEquals(TEST_PROJECT.getProjectStatus().toString(), result.getProjectStatus().toString());
-//            assertTrue(TEST_PROJECT.getProjectStartDate().compareTo(result.getProjectStartDate()) <= 0);
             assertEquals(TEST_PROJECT.getProjectCompletionDate(), result.getProjectCompletionDate());
             assertEquals(TEST_PROJECT.getTasks().size(), result.getTasks().size());
             var resultTask = result.getTasks().get(0);
@@ -218,9 +219,9 @@ public class ViewEndpointTests {
         }
 
         @Test
-        public void shouldReturnNothing() {
-            assertTrue(projectService.findProjectById(999L).isEmpty());
-            assertTrue(taskService.findTaskById(9999L).isEmpty());
+        public void shouldThrow() {
+            assertThrows(EntityDoesNotExistException.class, ()-> projectService.findProjectById(999L));
+            assertThrows(EntityDoesNotExistException.class, ()-> taskService.findTaskById(999L));
         }
 
     }

@@ -25,6 +25,11 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDto> getTasksByProjectId(Long projectId) {
+
+        if (!projectRepository.existsById(projectId)) {
+            throw new EntityDoesNotExistException(String.format("Project with specified id %d does not exist!", projectId));
+        }
+
         var result = taskRepository.findAllByProjectId(projectId);
 
         return result.stream().map(s -> mapper.map(s, TaskDto.class)).collect(Collectors.toList());
@@ -68,6 +73,12 @@ public class TaskServiceImpl implements TaskService {
         if (!taskRepository.existsById(taskId)) {
             throw new EntityDoesNotExistException(String.format("Task with specified id %d does not exist!", taskId));
         }
+        if (taskDto.getProjectId() == null) {
+            throw new IllegalArgumentException("No project id specified for taskId " + taskId);
+        }
+        if (!projectRepository.existsById(taskDto.getProjectId())) {
+            throw new EntityDoesNotExistException(String.format("Project with specified id %d does not exist!", taskDto.getProjectId()));
+        }
         taskDto.setId(taskId);
         var newTask = taskRepository.save(mapper.map(taskDto, Task.class));
         return mapper.map(newTask, TaskDto.class);
@@ -78,6 +89,9 @@ public class TaskServiceImpl implements TaskService {
     public Optional<TaskDto> findTaskById(Long id) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Id cannot be null or <= 0");
+        }
+        if (!taskRepository.existsById(id)) {
+            throw new EntityDoesNotExistException(String.format("Task with specified id %d does not exist!", id));
         }
         return taskRepository.findById(id).map(s -> mapper.map(s, TaskDto.class));
     }
