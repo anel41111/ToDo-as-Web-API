@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test") //uses application-test.properties for enviroment
-public class GetEndpointTest {
+public class ViewEndpointTests {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -59,7 +59,7 @@ public class GetEndpointTest {
 
         @BeforeEach
         public void setUp() {
-            InputStream is = GetEndpointTest.class.getResourceAsStream("/data.sql");
+            InputStream is = ViewEndpointTests.class.getResourceAsStream("/data.sql");
             assertNotNull(is);
             String data = new BufferedReader(
                     new InputStreamReader(is, StandardCharsets.UTF_8))

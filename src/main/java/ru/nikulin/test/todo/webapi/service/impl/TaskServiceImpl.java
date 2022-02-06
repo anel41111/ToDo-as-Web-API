@@ -30,7 +30,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto saveTaskForProject(TaskDto taskDto, Long projectId) {
+    public TaskDto addTaskForProject(TaskDto taskDto, Long projectId) {
         return null;
     }
 

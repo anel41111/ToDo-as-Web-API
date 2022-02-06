@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface TaskService {
     List<TaskDto> getTasksByProjectId(Long projectId);
 
-    TaskDto saveTaskForProject(TaskDto taskDto, Long projectId);
+    TaskDto addTaskForProject(TaskDto taskDto, Long projectId);
 
     void deleteTaskById(Long taskId);
 
