@@ -6,5 +6,4 @@ import ru.nikulin.test.todo.webapi.model.Project;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-
 }

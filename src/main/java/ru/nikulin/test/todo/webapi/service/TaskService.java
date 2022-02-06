@@ -8,11 +8,11 @@ import java.util.Optional;
 public interface TaskService {
     List<TaskDto> getTasksByProjectId(Long projectId);
 
-    boolean saveTaskForProject(TaskDto taskDto, Long projectId);
+    TaskDto saveTaskForProject(TaskDto taskDto, Long projectId);
 
-    boolean deleteTaskById(Long taskId);
+    void deleteTaskById(Long taskId);
 
-    boolean updateTask(TaskDto taskDto);
+    TaskDto updateTask(TaskDto taskDto, Long taskId);
 
     Optional<TaskDto> findTaskById(Long id);
 }

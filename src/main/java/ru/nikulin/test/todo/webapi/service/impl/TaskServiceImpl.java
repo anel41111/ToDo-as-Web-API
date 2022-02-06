@@ -30,19 +30,20 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public boolean saveTaskForProject(TaskDto taskDto, Long projectId) {
-        return false;
+    public TaskDto saveTaskForProject(TaskDto taskDto, Long projectId) {
+        return null;
     }
 
     @Override
-    public boolean deleteTaskById(Long taskId) {
-        return false;
+    public void deleteTaskById(Long taskId) {
+
     }
 
     @Override
-    public boolean updateTask(TaskDto taskDto) {
-        return false;
+    public TaskDto updateTask(TaskDto taskDto, Long taskId) {
+        return null;
     }
+
 
     @Override
     public Optional<TaskDto> findTaskById(Long id) {
