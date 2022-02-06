@@ -40,7 +40,9 @@ public class ModelMapperConfiguration {
             }
             return null;
         });
-        modelMapper.typeMap(Task.class, TaskDto.class).addMapping(source -> source.getProject().getId(), (destination, value) -> destination.setProjectId((Long) value));
+        modelMapper.typeMap(Task.class, TaskDto.class)
+                .addMapping(source -> source.getProject().getId(),
+                        (destination, value) -> destination.setProjectId((Long) value));
         return modelMapper;
     }
 }

@@ -73,4 +73,6 @@ public class ProjectController {
         var taskList = taskService.getTasksByProjectId(id);
         return ResponseEntity.ok(taskList);
     }
+
+
 }

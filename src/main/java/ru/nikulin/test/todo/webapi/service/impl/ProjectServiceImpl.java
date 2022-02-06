@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.nikulin.test.todo.webapi.dao.ProjectRepository;
 import ru.nikulin.test.todo.webapi.dto.ProjectDto;
 import ru.nikulin.test.todo.webapi.dto.ProjectStatusDto;
+import ru.nikulin.test.todo.webapi.exception.EntityDoesNotExistException;
 import ru.nikulin.test.todo.webapi.model.Project;
 import ru.nikulin.test.todo.webapi.service.ProjectService;
 
@@ -50,6 +51,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDto addProject(ProjectDto projectDto) {
+        projectDto.setId(null);
         var newProject = projectRepository.save(mapper.map(projectDto, Project.class));
         return mapper.map(newProject, ProjectDto.class);
     }
@@ -61,8 +63,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDto updateProject(ProjectDto projectDto, Long projectId) {
+        if (!projectRepository.existsById(projectId)) {
+            throw new EntityDoesNotExistException(String.format("Project with specified id %d does not exist!", projectId));
+        }
         projectDto.setId(projectId);
         var newProject = projectRepository.save(mapper.map(projectDto, Project.class));
         return mapper.map(newProject, ProjectDto.class);
+
     }
 }

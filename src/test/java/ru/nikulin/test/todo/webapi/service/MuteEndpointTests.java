@@ -13,6 +13,7 @@ import ru.nikulin.test.todo.webapi.dto.ProjectDto;
 import ru.nikulin.test.todo.webapi.dto.ProjectStatusDto;
 import ru.nikulin.test.todo.webapi.dto.TaskDto;
 import ru.nikulin.test.todo.webapi.dto.TaskStatusDto;
+import ru.nikulin.test.todo.webapi.exception.TaskManagerExtension;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -110,15 +111,29 @@ public class MuteEndpointTests {
             var result = projectService.addProject(TEST_PROJECT_DTO);
             assertNotNull(result);
             assertNull(result.getProjectCompletionDate());
-            assertNotEquals(TEST_NEW_PROJECT_NAME, result.getProjectName());
-            assertNotEquals(TEST_NEW_STATUS, result.getProjectStatus());
-            result.setProjectName(TEST_NEW_PROJECT_NAME);
             result.setProjectCompletionDate(TEST_NEW_COMPLETION_DATE);
+            assertNotEquals(TEST_NEW_PROJECT_NAME, result.getProjectName());
+            result.setProjectName(TEST_NEW_PROJECT_NAME);
+            assertNotEquals(TEST_NEW_STATUS, result.getProjectStatus());
             result.setProjectStatus(TEST_NEW_STATUS);
             var newResult = projectService.updateProject(result, result.getId());
             assertNotNull(newResult);
             assertNotNull(result.getProjectCompletionDate());
             assertEquals(TEST_NEW_STATUS, result.getProjectStatus());
+        }
+
+        @Test
+        public void shouldFailUpdateOfNonExistingProject() {
+            var result = TEST_PROJECT_DTO;
+            result.setId(100L);
+            assertThrows(TaskManagerExtension.class, () -> projectService.updateProject(result, result.getId()));
+        }
+
+        @Test
+        public void shouldFailUpdateOfNonExistingTask() {
+            var result = TEST_TASK_DTO;
+            result.setId(100L);
+            assertThrows(TaskManagerExtension.class, () -> taskService.updateTask(result, result.getId()));
         }
 
         @Test
