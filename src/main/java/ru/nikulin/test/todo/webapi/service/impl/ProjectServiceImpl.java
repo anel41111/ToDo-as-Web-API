@@ -43,6 +43,9 @@ public class ProjectServiceImpl implements ProjectService {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Id cannot be null or <= 0");
         }
+        if (!projectRepository.existsById(id)) {
+            throw new EntityDoesNotExistException(String.format("Project with specified id %d does not exist!", id));
+        }
         return projectRepository.findById(id).map(s -> mapper.map(s, ProjectDto.class));
     }
 

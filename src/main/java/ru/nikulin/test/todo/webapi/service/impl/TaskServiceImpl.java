@@ -73,6 +73,12 @@ public class TaskServiceImpl implements TaskService {
         if (!taskRepository.existsById(taskId)) {
             throw new EntityDoesNotExistException(String.format("Task with specified id %d does not exist!", taskId));
         }
+        if (taskDto.getProjectId() == null) {
+            throw new IllegalArgumentException("No project id specified for taskId " + taskId);
+        }
+        if (!projectRepository.existsById(taskDto.getProjectId())) {
+            throw new EntityDoesNotExistException(String.format("Project with specified id %d does not exist!", taskDto.getProjectId()));
+        }
         taskDto.setId(taskId);
         var newTask = taskRepository.save(mapper.map(taskDto, Task.class));
         return mapper.map(newTask, TaskDto.class);
