@@ -107,7 +107,7 @@ public class MuteEndpointTests {
         TaskStatusDto TEST_NEW_TASK_STATUS = TaskStatusDto.Done;
 
         @Test
-        public void shouldSuccessfullyUpdateProject() {
+        public void shouldSuccessfullyUpdateSingleProject() {
             var result = projectService.addProject(TEST_PROJECT_DTO);
             assertNotNull(result);
             assertNull(result.getProjectCompletionDate());
@@ -123,7 +123,7 @@ public class MuteEndpointTests {
         }
 
         @Test
-        public void shouldFailUpdateOfNonExistingProject() {
+        public void shouldFailUpdateOfNonExistingSingleProject() {
             var result = TEST_PROJECT_DTO;
             result.setId(100L);
             assertThrows(TaskManagerExtension.class, () -> projectService.updateProject(result, result.getId()));
@@ -137,7 +137,7 @@ public class MuteEndpointTests {
         }
 
         @Test
-        public void shouldSuccessfullyUpdateTask() {
+        public void shouldSuccessfullyUpdateSingleTask() {
             var projectId = projectService.addProject(TEST_PROJECT_DTO).getId();
             assertNotNull(projectId);
             var newTask = taskService.addTaskForProject(TEST_TASK_DTO, projectId);

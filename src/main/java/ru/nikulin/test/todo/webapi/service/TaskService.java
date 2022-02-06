@@ -10,6 +10,8 @@ public interface TaskService {
 
     TaskDto addTaskForProject(TaskDto taskDto, Long projectId);
 
+    List<TaskDto> addTasksForProject(TaskDto[] taskDto, Long projectId);
+
     void deleteTaskById(Long taskId);
 
     TaskDto updateTask(TaskDto taskDto, Long taskId);

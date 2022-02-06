@@ -12,10 +12,7 @@ import ru.nikulin.test.todo.webapi.exception.EntityDoesNotExistException;
 import ru.nikulin.test.todo.webapi.model.Project;
 import ru.nikulin.test.todo.webapi.service.ProjectService;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,6 +54,17 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<ProjectDto> addProjects(ProjectDto[] projectDtos) {
+        var newProject = projectRepository.saveAll(
+                Arrays.stream(projectDtos)
+                        .peek(s -> s.setId(null))
+                        .map(s -> mapper.map(s, Project.class))
+                        .collect(Collectors.toList()));
+
+        return newProject.stream().map(s -> mapper.map(s, ProjectDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
     public void deleteProject(Long projectId) {
         projectRepository.deleteById(projectId);
     }
@@ -69,6 +77,5 @@ public class ProjectServiceImpl implements ProjectService {
         projectDto.setId(projectId);
         var newProject = projectRepository.save(mapper.map(projectDto, Project.class));
         return mapper.map(newProject, ProjectDto.class);
-
     }
 }
