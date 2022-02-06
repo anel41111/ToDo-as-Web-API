@@ -14,9 +14,11 @@ public interface ProjectService {
 
     Optional<ProjectDto> findProjectById(Long id);
 
-    boolean addProject(ProjectDto projectDto);
+    ProjectDto addProject(ProjectDto projectDto);
 
-    boolean deleteProject(ProjectDto projectDto);
+    List<ProjectDto> addProjects(ProjectDto[] projectDtos);
 
-    boolean updateProject(ProjectDto projectDto);
+    void deleteProject(Long projectId);
+
+    ProjectDto updateProject(ProjectDto projectDto, Long projectId);
 }

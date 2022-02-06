@@ -35,7 +35,7 @@ public class Project {
     @Column
     private Integer priority;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy("id")
     private List<Task> tasks;
 

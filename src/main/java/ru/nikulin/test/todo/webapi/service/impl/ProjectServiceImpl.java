@@ -8,12 +8,11 @@ import org.springframework.stereotype.Service;
 import ru.nikulin.test.todo.webapi.dao.ProjectRepository;
 import ru.nikulin.test.todo.webapi.dto.ProjectDto;
 import ru.nikulin.test.todo.webapi.dto.ProjectStatusDto;
+import ru.nikulin.test.todo.webapi.exception.EntityDoesNotExistException;
+import ru.nikulin.test.todo.webapi.model.Project;
 import ru.nikulin.test.todo.webapi.service.ProjectService;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,17 +47,35 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public boolean addProject(ProjectDto projectDto) {
-        return false;
+    public ProjectDto addProject(ProjectDto projectDto) {
+        projectDto.setId(null);
+        var newProject = projectRepository.save(mapper.map(projectDto, Project.class));
+        return mapper.map(newProject, ProjectDto.class);
     }
 
     @Override
-    public boolean deleteProject(ProjectDto projectDto) {
-        return false;
+    public List<ProjectDto> addProjects(ProjectDto[] projectDtos) {
+        var newProject = projectRepository.saveAll(
+                Arrays.stream(projectDtos)
+                        .peek(s -> s.setId(null))
+                        .map(s -> mapper.map(s, Project.class))
+                        .collect(Collectors.toList()));
+
+        return newProject.stream().map(s -> mapper.map(s, ProjectDto.class)).collect(Collectors.toList());
     }
 
     @Override
-    public boolean updateProject(ProjectDto projectDto) {
-        return false;
+    public void deleteProject(Long projectId) {
+        projectRepository.deleteById(projectId);
+    }
+
+    @Override
+    public ProjectDto updateProject(ProjectDto projectDto, Long projectId) {
+        if (!projectRepository.existsById(projectId)) {
+            throw new EntityDoesNotExistException(String.format("Project with specified id %d does not exist!", projectId));
+        }
+        projectDto.setId(projectId);
+        var newProject = projectRepository.save(mapper.map(projectDto, Project.class));
+        return mapper.map(newProject, ProjectDto.class);
     }
 }
