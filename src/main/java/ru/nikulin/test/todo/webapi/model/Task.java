@@ -27,6 +27,9 @@ public class Task {
     @Column
     private Integer priority;
 
+    @ManyToOne
+    private Project project;
+
     @Column
     private TaskStatus taskStatus;
 

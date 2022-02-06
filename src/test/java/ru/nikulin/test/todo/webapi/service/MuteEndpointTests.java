@@ -37,7 +37,8 @@ public class MuteEndpointTests {
             "TEST_TASK_NAME",
             "TEST_TASK_DESCRIPTION",
             100,
-            TaskStatusDto.ToDo);
+            TaskStatusDto.ToDo,
+            null);
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;

@@ -27,4 +27,7 @@ public class TaskDto {
 
     @NotNull(message = "Task status must be specified")
     private TaskStatusDto taskStatus;
+
+    @Nullable
+    private Long projectId;
 }
