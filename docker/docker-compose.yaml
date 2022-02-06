@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:latest
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+        - POSTGRES_USER=root
+        - POSTGRES_PASSWORD=password
+        - APP_DB_USER=docker
+        - APP_DB_PASS=docker
+        - APP_DB_NAME=docker
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+
+  app:
+    container_name: swagger_ui
+    build: ../.
+    restart: on-failure
+    depends_on:
+      - db
+    networks:
+      - project
+    ports:
+      - "8080:8080"
+    environment:
+      DATASOURCE_URL: ${DATASOURCE_URL}
+      DATASOURCE_USERNAME: ${DATASOURCE_USERNAME}
+      DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
+      DATASOURCE_TEST_URL: ${DATASOURCE_TEST_URL}
+      DATASOURCE_TEST_USERNAME: ${DATASOURCE_TEST_USERNAME}
+      DATASOURCE_TEST_PASSWORD: ${DATASOURCE_TEST_PASSWORD}
+
+networks:
+  project:
+    driver: bridge
