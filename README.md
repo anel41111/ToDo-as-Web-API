@@ -18,7 +18,7 @@ Thus, we arrive at the following API public interface:
 * "/api/projects/" - get all projects (plus sorting & pagination)
 * "/api/projects/{id}" - get project details
 * "/api/projects/{id}/tasks" - get project tasks (plus sorting & pagination)
-* "/api/tasks/{id}" - get project details
+* "/api/tasks/{id}" - get task details
 
 ### DELETE
 * "/api/projects/{id}" - delete a project and all related tasks 
