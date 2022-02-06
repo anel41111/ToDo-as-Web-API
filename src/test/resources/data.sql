@@ -1,5 +1,3 @@
--- clear table
-TRUNCATE TABLE projects, tasks, projects_tasks RESTART IDENTITY;
 
 -- 100 projects
 insert into projects (priority, project_completion_date, project_name, project_start_date, project_status)
