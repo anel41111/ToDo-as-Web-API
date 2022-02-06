@@ -8,13 +8,16 @@ services:
       timeout: 45s
       interval: 10s
       retries: 10
-    restart: always
+    restart: unless-stopped
+    networks:
+      - project
     environment:
-        - POSTGRES_USER=root
-        - POSTGRES_PASSWORD=password
-        - APP_DB_USER=docker
-        - APP_DB_PASS=docker
-        - APP_DB_NAME=docker
+        POSTGRES_USER: ${DATASOURCE_USERNAME}
+        POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}
+        POSTGRES_DB: ${DATASOURCE_DB}
+        APP_DB_USER: ${DATASOURCE_TEST_USERNAME}
+        APP_DB_PASS: ${DATASOURCE_TEST_PASSWORD}
+        APP_DB_NAME: ${DATASOURCE_TEST_USERNAME}
     volumes:
       - ./db:/docker-entrypoint-initdb.d/
     ports:
@@ -23,7 +26,7 @@ services:
   app:
     container_name: swagger_ui
     build: ../.
-    restart: on-failure
+    restart: unless-stopped
     depends_on:
       - db
     networks:
