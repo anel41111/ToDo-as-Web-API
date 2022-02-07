@@ -42,9 +42,9 @@ REQUIREMENTS FOR PRESENTATION FORMAT
 
 **The completed task must be uploaded to GitHub and include:**
 
-1\. **Mandatory:** provide all source files along with the project files.
+1. **Mandatory:** provide all source files along with the project files.
 
-2\. **Mandatory:** describe the system configuration, startup process in the
+2. **Mandatory:** describe the system configuration, startup process in the
 explanatory note.
 
 **IT** WILL BE A PLUS
