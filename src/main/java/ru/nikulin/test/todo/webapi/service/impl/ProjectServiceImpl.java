@@ -91,7 +91,11 @@ public class ProjectServiceImpl implements ProjectService {
             throw new EntityDoesNotExistException(String.format("Project with specified id %d does not exist!", projectId));
         }
         projectDto.setId(projectId);
+        if (projectDto.getTasks() != null && !projectDto.getTasks().isEmpty()) {
+            projectDto.setTasks(projectDto.getTasks().stream().peek(taskDto -> taskDto.setProjectId(projectId)).collect(Collectors.toList()));
+        }
         var newProject = projectRepository.save(mapper.map(projectDto, Project.class));
+
         return mapper.map(newProject, ProjectDto.class);
     }
 }
