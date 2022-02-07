@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import ru.nikulin.test.todo.webapi.dao.ProjectRepository;
 import ru.nikulin.test.todo.webapi.dto.ProjectDto;
 import ru.nikulin.test.todo.webapi.dto.ProjectStatusDto;
+import ru.nikulin.test.todo.webapi.dto.TaskDto;
 import ru.nikulin.test.todo.webapi.exception.EntityDoesNotExistException;
 import ru.nikulin.test.todo.webapi.model.Project;
 import ru.nikulin.test.todo.webapi.service.ProjectService;
+import ru.nikulin.test.todo.webapi.service.TaskService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final TaskService taskService;
     private final ModelMapper mapper;
 
     @Override
@@ -52,14 +55,24 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDto addProject(ProjectDto projectDto) {
         projectDto.setId(null);
-        var newProject = projectRepository.save(mapper.map(projectDto, Project.class));
-        return mapper.map(newProject, ProjectDto.class);
+
+        if (projectDto.getTasks() == null || projectDto.getTasks().isEmpty()) {
+            var newProject = projectRepository.save(mapper.map(projectDto, Project.class));
+            return mapper.map(newProject, ProjectDto.class);
+        }
+        var tasks = projectDto.getTasks();
+        projectDto.setTasks(null);
+        var newProject = mapper.map(projectRepository.save(mapper.map(projectDto, Project.class)), ProjectDto.class);
+        var newTasks = taskService.addTasksForProject(tasks.toArray(TaskDto[]::new), newProject.getId());
+        newProject.setTasks(newTasks);
+        return newProject;
     }
 
     @Override
     public List<ProjectDto> addProjects(ProjectDto[] projectDtos) {
         var newProject = projectRepository.saveAll(
                 Arrays.stream(projectDtos)
+                        .peek(projectDto -> projectDto.setTasks(projectDto.getTasks().stream().peek(taskDto -> taskDto.setId(null)).collect(Collectors.toList())))
                         .peek(s -> s.setId(null))
                         .map(s -> mapper.map(s, Project.class))
                         .collect(Collectors.toList()));
@@ -78,7 +91,11 @@ public class ProjectServiceImpl implements ProjectService {
             throw new EntityDoesNotExistException(String.format("Project with specified id %d does not exist!", projectId));
         }
         projectDto.setId(projectId);
+        if (projectDto.getTasks() != null && !projectDto.getTasks().isEmpty()) {
+            projectDto.setTasks(projectDto.getTasks().stream().peek(taskDto -> taskDto.setProjectId(projectId)).collect(Collectors.toList()));
+        }
         var newProject = projectRepository.save(mapper.map(projectDto, Project.class));
+
         return mapper.map(newProject, ProjectDto.class);
     }
 }
