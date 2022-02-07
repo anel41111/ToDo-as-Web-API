@@ -18,6 +18,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/projects")
@@ -52,11 +53,11 @@ public class ProjectController {
 //                            allowableValues = {"id", "priority", "projectStatus", "projectStartDate", "projectCompletionDate"}))
             @RequestParam(defaultValue = "false") Boolean groupByStatus) {
         var projectList = projectService.findAllProjects(pageNo, pageSize, sortBy);
-        /*if (groupByStatus) { //TODO: implement
+        if (groupByStatus) {
             var projectMap = projectList.stream()
-                    .collect(Collectors.groupingBy());
+                    .collect(Collectors.groupingBy(ProjectDto::getProjectStatus));
             return ResponseEntity.ok(projectMap);
-        }*/
+        }
         return ResponseEntity.ok(projectList);
     }
 
